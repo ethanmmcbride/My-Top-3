@@ -1,5 +1,12 @@
+const express = require('express');
+const cors = require('cors');
 const axios = require('axios');
 const querystring = require('querystring');
+
+const app = express();
+app.use(cors());
+
+const PORT = 3001;
 
 // Replace these with your actual credentials
 const CLIENT_ID = '72183dd0908241ee86e1067f9e3f0f97';
@@ -35,14 +42,15 @@ async function getAccessToken() {
   }
 }
 
-async function getArtistData(accessToken) {
+async function getArtistData() {
   console.log('Attempting to get artist data...');
   try {
+    const token = await getAccessToken();
     const response = await axios.get(
       `https://api.spotify.com/v1/artists/${ARTIST_ID}`,
       {
         headers: {
-          'Authorization': `Bearer ${accessToken}`
+          'Authorization': `Bearer ${token}`
         }
       }
     );
@@ -60,20 +68,34 @@ async function getArtistData(accessToken) {
   }
 }
 
-async function main() {
+app.get('/api/artist', async (req, res) => {
   try {
-    const accessToken = await getAccessToken();
-    const artistData = await getArtistData(accessToken);
-    console.log('\nArtist Data:');
-    console.log(JSON.stringify(artistData, null, 2));
-    console.log('\nSuccessfully completed!');
-  } catch (error) {
-    console.error('\nScript failed to complete:');
-    console.error(error.message);
-    process.exit(1); // Exit with error code
+    const data = await getArtistData();
+    res.json(data);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: 'Failed to fetch artist data' });
   }
-}
+});
 
-// Add a message to indicate script start
-console.log('Starting Spotify API script...\n');
-main();
+app.listen(PORT, () => {
+  console.log(`Server listening on http://localhost:${PORT}`);
+});
+
+// async function main() {
+//   try {
+//     const accessToken = await getAccessToken();
+//     const artistData = await getArtistData(accessToken);
+//     console.log('\nArtist Data:');
+//     console.log(JSON.stringify(artistData, null, 2));
+//     console.log('\nSuccessfully completed!');
+//   } catch (error) {
+//     console.error('\nScript failed to complete:');
+//     console.error(error.message);
+//     process.exit(1); // Exit with error code
+//   }
+// }
+
+// // Add a message to indicate script start
+// console.log('Starting Spotify API script...\n');
+// main();
