@@ -4,8 +4,9 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 
-// Mount API routes
+// API routes
 app.use('/api/spotify', require('./routes/spotify'));
+app.use('/api/lyrics', require('./routes/lyricsovh'));
 
 // Future: app.use('/api/itunes', require('./routes/itunes'))
 
