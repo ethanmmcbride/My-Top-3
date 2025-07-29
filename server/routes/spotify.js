@@ -41,6 +41,7 @@ async function getAccessToken() {
   }
 }
 
+// Testing Artist Get by ID
 router.get('/', async (req, res) => {
   console.log('Entering Spotify route');
   try {
@@ -62,3 +63,23 @@ router.get('/', async (req, res) => {
 });
 
 module.exports = router;
+router.get('/search', async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q) return res.status(400).json({ error: 'Query parameter "q" is required' });
+
+    const token = await getAccessToken();
+    const response = await axios.get(
+      `https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=track&limit=10`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+    res.json(response.data);
+  } catch (err) {
+    console.error('Spotify search error:', err.message);
+    res.status(500).json({ error: 'Failed to search songs' });
+  }
+});
