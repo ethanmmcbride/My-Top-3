@@ -1,6 +1,7 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { useState } from 'react';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -28,7 +29,7 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('user');
 
-  const BASE_URL = 'http://localhost:3000';
+  const BASE_URL = 'http://localhost:3001';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
