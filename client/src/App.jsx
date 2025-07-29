@@ -9,6 +9,11 @@ function App() {
   const [loadingGemini, setLoadingGemini] = useState(false);
   const [errorGemini, setErrorGemini] = useState(null);
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    window.location.reload();
+  };
+
   useEffect(() => {
     fetch('/api/spotify')
       .then((res) => res.json())
@@ -67,6 +72,9 @@ function App() {
 
   return (
     <div className="card">
+      <button onClick={logout} style={{ float: 'right', margin: '10px' }}>
+        Logout
+      </button>
       <h1>Song Rank</h1>
       <div style={{ margin: '20px 0', padding: '20px', border: '1px solid #ddd' }}>
         <h2>Gemini AI Test</h2>

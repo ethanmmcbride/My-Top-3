@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-//const { connectDB } = require('./db');
+const connectDB = require('./db');
+connectDB();
 
 const app = express();
 app.use(cors());
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use('/api/spotify', require('./routes/spotify'));
 app.use('/api/lyrics', require('./routes/lyricsovh'));
 app.use('/api/gemini', require('./routes/gemini'));
+app.use('/', require('./routes/auth'));
 
 
 const PORT = 3001;
