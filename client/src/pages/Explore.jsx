@@ -29,13 +29,18 @@ const Explore = () => {
     if (!token) return;
     
     try {
-      const response = await fetch('/api/verify-token', {
+      const response = await fetch('/verify-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ idToken: token })
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
       setIsAdmin(data.user?.role === 'admin');
     } catch (err) {
@@ -49,23 +54,26 @@ const Explore = () => {
       await fetch(`/api/lists/${listId}`, {
         method: 'DELETE',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
-        }
+        },
+        body: JSON.stringify({ idToken: token })
       });
       setLists(lists.filter(list => list._id !== listId));
     } catch (err) {
       console.error('Error deleting list:', err);
+      alert('Failed to delete list');
     }
   };
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-      <h1>Explore Lists</h1>
+      <h1>Explore Published Lists</h1>
       
       {loading ? (
         <p>Loading...</p>
       ) : lists.length === 0 ? (
-        <p>No published lists yet.</p>
+        <p>No published lists yet. Be the first to publish your Top 3!</p>
       ) : (
         <div>
           {lists.map(list => (

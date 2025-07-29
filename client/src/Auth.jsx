@@ -62,9 +62,9 @@ const Auth = () => {
 
         const data = await verify.json();
         if (data.user.role === 'admin') {
-          window.location.href = '/manager';
+          window.location.href = '/my-lists';
         } else {
-          window.location.href = '/';
+          window.location.href = '/my-lists';
         }
       }
     } catch (err) {

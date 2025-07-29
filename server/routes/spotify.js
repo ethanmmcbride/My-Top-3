@@ -5,7 +5,6 @@ require('dotenv').config({ path: '../.env' });
 
 const router = express.Router();
 
-// Replace these with your actual credentials
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const ARTIST_ID = process.env.SPOTIFY_METALLICA_ID; // Metallica's Spotify ID
