@@ -5,6 +5,9 @@ function App() {
   const [artist, setArtist] = useState(null);
   const [lyrics, setLyrics] = useState(null);
   const [loadingLyrics, setLoadingLyrics] = useState(false);
+  const [recommendationsGemini, setRecommendationsGemini] = useState(null);
+  const [loadingGemini, setLoadingGemini] = useState(false);
+  const [errorGemini, setErrorGemini] = useState(null);
 
   useEffect(() => {
     fetch('/api/spotify')
@@ -30,8 +33,63 @@ function App() {
       });
   };
 
+  const getMetallicaRecommendations = async () => {
+    setLoadingGemini(true);
+    setErrorGemini(null);
+    try {
+      const response = await fetch('/api/gemini/recommendations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          songs: [{
+            name: "Enter Sandman",
+            artists: [{ name: "Metallica" }]
+          }],
+          userId: "test-user" // Mock user ID for testing
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get recommendations');
+      }
+
+      const data = await response.json();
+      setRecommendationsGemini(data);
+    } catch (err) {
+      setErrorGemini(err.message);
+      console.error('Recommendation error:', err);
+    } finally {
+      setLoadingGemini(false);
+    }
+  };
+
   return (
     <div className="card">
+      <h1>Song Rank</h1>
+      <div style={{ margin: '20px 0', padding: '20px', border: '1px solid #ddd' }}>
+        <h2>Gemini AI Test</h2>
+        <button 
+          onClick={getMetallicaRecommendations}
+          disabled={loadingGemini}
+        >
+          {loadingGemini ? 'Loading...' : 'Get Metallica Recommendations'}
+        </button>
+        
+        {errorGemini && <p style={{ color: 'red' }}>{errorGemini}</p>}
+        
+        {recommendationsGemini && (
+          <div style={{ 
+            marginTop: '20px',
+            textAlign: 'left',
+            whiteSpace: 'pre-wrap'
+          }}>
+            <h3>Recommendations:</h3>
+            <pre>{JSON.stringify(recommendationsGemini, null, 2)}</pre>
+          </div>
+        )}
+      </div>
       <h1>Spotify Artist Info</h1>
         {artist ? (
           <>

@@ -1,13 +1,16 @@
 const express = require('express');
 const axios = require('axios');
 const querystring = require('querystring');
+require('dotenv').config({ path: '../.env' });
 
 const router = express.Router();
 
 // Replace these with your actual credentials
-const CLIENT_ID = '72183dd0908241ee86e1067f9e3f0f97';
-const CLIENT_SECRET = '29ba8da169dd457fb7c2eb566ebd255c';
-const ARTIST_ID = '2ye2Wgw4gimLv2eAKyk1NB'; // Metallica's Spotify ID
+const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const ARTIST_ID = process.env.SPOTIFY_METALLICA_ID; // Metallica's Spotify ID
+console.log('Client ID:', process.env.SPOTIFY_CLIENT_ID);
+console.log('Client Secret:', process.env.SPOTIFY_CLIENT_SECRET ? 'Present' : 'Missing');
 
 async function getAccessToken() {
   console.log('Attempting to get access token...');
