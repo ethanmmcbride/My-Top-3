@@ -116,6 +116,31 @@ router.patch('/unpublish', async (req, res) => {
   }
 });
 
+router.patch('/admin/unpublish/:listId', async (req, res) => {
+    try {
+      const { idToken } = req.body;
+      const decoded = await admin.auth().verifyIdToken(idToken);
+      const user = await User.findOne({ firebaseUID: decoded.uid });
+
+      if (!user || user.role !== 'admin') {
+        return res.status(403).json({ message: 'Unauthorized' });
+      }
+
+      const list = await List.findByIdAndUpdate(
+        req.params.listId,
+        { isPublished: false },
+        { new: true }
+      );
+
+      if (!list) return res.status(404).json({ message: 'List not found' });
+
+      res.json(list);
+    } catch (err) {
+      console.error('Admin unpublish error:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
 // Get all published lists (for explore page)
 router.get('/explore', async (req, res) => {
   try {

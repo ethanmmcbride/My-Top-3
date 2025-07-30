@@ -1,4 +1,4 @@
-const SongCard = ({ song, onRemove }) => {
+const SongCard = ({ song, onRemove, onShowLyrics }) => {
   return (
     <div style={{ 
       border: '1px solid #ddd', 
@@ -23,7 +23,11 @@ const SongCard = ({ song, onRemove }) => {
             <source src={song.previewUrl} type="audio/mpeg" />
           </audio>
         )}
-      </div>
+
+      <div style={{ marginTop: '5px' }}>
+          {onShowLyrics && (
+            <button onClick={() => onShowLyrics(song)}>Lyrics</button>
+          )}
       {onRemove && (
         <button 
           onClick={() => onRemove(song)}
@@ -32,6 +36,8 @@ const SongCard = ({ song, onRemove }) => {
           Remove
         </button>
       )}
+    </div>
+    </div>
     </div>
   );
 };

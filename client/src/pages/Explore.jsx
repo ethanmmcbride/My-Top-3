@@ -29,7 +29,7 @@ const Explore = () => {
     if (!token) return;
     
     try {
-      const response = await fetch('/verify-token', {
+      const response = await fetch('http://localhost:3001/verify-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,6 +45,33 @@ const Explore = () => {
       setIsAdmin(data.user?.role === 'admin');
     } catch (err) {
       console.error('Error checking admin status:', err);
+    }
+  };
+
+  const unpublishList = async (listId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`/api/lists/admin/unpublish/${listId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ idToken: token })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to unpublish list');
+      }
+
+      const updated = await response.json();
+      // Remove from explore list view
+      setLists(prev => prev.filter(list => list._id !== updated._id));
+      alert('List unpublished successfully');
+    } catch (err) {
+      console.error('Unpublish failed:', err);
+      alert(err.message);
     }
   };
 
@@ -80,8 +107,9 @@ const Explore = () => {
             <ListCard 
               key={list._id} 
               list={list} 
-              isOwner={false}
               onDelete={isAdmin ? deleteList : null}
+              isAdmin={isAdmin}
+              onUnpublish={isAdmin ? unpublishList : null}
             />
           ))}
         </div>

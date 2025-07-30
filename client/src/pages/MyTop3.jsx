@@ -9,6 +9,12 @@ const MyList = () => {
   const [error, setError] = useState(null);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+  const [lyrics, setLyrics] = useState('');
+  const [lyricsLoading, setLyricsLoading] = useState(false);
+  const [lyricsError, setLyricsError] = useState('');
+  const [recommendations, setRecommendations] = useState(null);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+  const [recommendationError, setRecommendationError] = useState('');
 
   useEffect(() => {
     if (!token) {
@@ -41,6 +47,74 @@ const MyList = () => {
       alert(err.message || 'Failed to fetch list. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchLyrics = async (song) => {
+    setLyrics('');
+    setLyricsError('');
+    setLyricsLoading(true);
+
+    try {
+    //   const sanitize = (str) => {
+    //     return str
+    //       .toLowerCase()
+    //       .replace(/ *\([^)]*\) */g, '') // Remove things in parentheses
+    //       .replace(/[^a-z0-9 ]/gi, '')   // Remove special chars
+    //       .trim();
+    //   };
+    //   const artistSafe = sanitize(song.artist);
+    //   const titleSafe = sanitize(song.name);
+      const res = await fetch(`/api/lyrics/${encodeURIComponent(song.artist)}/${encodeURIComponent(song.name)}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to fetch lyrics');
+      }
+
+      setLyrics(data.lyrics);
+    } catch (err) {
+      setLyricsError(err.message);
+    } finally {
+      setLyricsLoading(false);
+    }
+  };
+
+  const getRecommendations = async () => {
+    if (!list || !list.songs || list.songs.length === 0) {
+      alert("You need at least one song in your list.");
+      return;
+    }
+
+    setLoadingRecommendations(true);
+    setRecommendationError('');
+    setRecommendations(null);
+
+    try {
+      const response = await fetch('/api/gemini/recommendations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          songs: list.songs.map(song => ({
+            name: song.name,
+            artists: [{ name: song.artist }]
+          }))
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get recommendations');
+      }
+
+      const data = await response.json();
+      setRecommendations(data);
+    } catch (err) {
+      console.error('AI Recommendation error:', err);
+      setRecommendationError(err.message || 'Something went wrong');
+    } finally {
+      setLoadingRecommendations(false);
     }
   };
 
@@ -137,11 +211,11 @@ const MyList = () => {
           <h2>Current List</h2>
           {list ? (
             <div>
-              <h3>{list.title}</h3>
-              <p>{list.description}</p>
+              {/* <h3>{list.title}</h3>
+              <p>{list.description}</p> */}
               
               <div style={{ marginTop: '20px' }}>
-                <h3>Your Top 3:</h3>
+                {/* <h3> My Top 3 </h3> */}
                 {list.songs?.length === 0 ? (
                   <p>No songs in your list yet. Add some below!</p>
                 ) : (
@@ -150,6 +224,7 @@ const MyList = () => {
                       key={index}
                       song={song}
                       onRemove={removeSongFromList}
+                      onShowLyrics={fetchLyrics}
                     />
                   ))
                 )}
@@ -217,16 +292,76 @@ const MyList = () => {
           ) : (
             <p>Loading your list...</p>
           )}
+          
         </div>
 
         <div style={{ flex: 1 }}>
           <h2>Add Songs</h2>
-          <SongSearch onAddSong={addSongToList} />
+          <SongSearch 
+            onAddSong={(song) => {
+              if (list?.songs?.length >= 3) {
+                alert("You can only add 3 songs to your list.");
+                return;
+              }
+              addSongToList(song);
+            }}
+          />
           {list?.songs?.length >= 3 && (
             <p style={{ color: 'red' }}>You've reached the maximum of 3 songs!</p>
           )}
         </div>
+
+        <div style={{ flex: 1 }}>
+          <button
+            onClick={getRecommendations}
+            disabled={loadingRecommendations || !list?.songs.length }
+            style={{
+              marginTop: '20px',
+              padding: '10px 15px',
+              backgroundColor: '#0070f3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            {loadingRecommendations ? 'Loading...' : 'Get AI Recommendations (based off of top 3!)'}
+          </button>
+          {recommendationError && (
+            <p style={{ color: 'red', marginTop: '10px' }}>{recommendationError}</p>
+          )}
+          {recommendations && (
+            <div style={{ marginTop: '20px', textAlign: 'left' }}>
+              <h3>AI Recommendations Based on Top 3</h3>
+              <pre style={{ whiteSpace: 'pre-wrap' }}>{recommendations.response}</pre>
+              {/* <ul>
+                {recommendations.map((rec, index) => (
+                  <li key={index} style={{ marginBottom: '10px' }}>
+                    <strong>{rec.song}</strong> by {rec.artist}<br />
+                    <em>{rec.reason}</em>
+                  </li>
+                )
+                )}
+              </ul> */}
+            </div>
+          )}
+        </div>
       </div>
+      
+      {lyricsLoading && <p>Loading lyrics...</p>}
+      {lyricsError && <p style={{ color: 'red' }}>{lyricsError}</p>}
+      {lyrics && (
+        <div style={{
+          marginTop: '20px',
+          textAlign: 'left',
+          padding: '10px',
+          backgroundColor: '#f5f5f5',
+          borderRadius: '5px'
+        }}>
+          <h3>Lyrics:</h3>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{lyrics}</pre>
+        </div>
+      )}
     </div>
   );
 };
