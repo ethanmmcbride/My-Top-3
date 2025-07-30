@@ -8,7 +8,7 @@ const ListCard = ({ list, onDelete, isAdmin = false, onUnpublish  }) => {
       margin: '15px 0'
     }}>
       <h3>{list.title}</h3>
-      {list.description && <p>{list.description}</p>}
+      {/* {list.description && <p>{list.description}</p>} */}
       <p>By: {list.userId?.email || 'Unknown user'}</p>
       
       <div style={{ marginTop: '10px' }}>
