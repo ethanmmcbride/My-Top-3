@@ -137,7 +137,8 @@ router.patch('/admin/unpublish/:listId', async (req, res) => {
       );
 
       if (!list) return res.status(404).json({ message: 'List not found' });
-
+      const io = req.app.get('io');
+      io.emit('listUpdated', { type: 'unpublished', listId: list._id });
       res.json(list);
     } catch (err) {
       console.error('Admin unpublish error:', err);
