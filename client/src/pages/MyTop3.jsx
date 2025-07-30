@@ -67,7 +67,7 @@ const MyList = () => {
     //   };
     //   const artistSafe = sanitize(song.artist);
     //   const titleSafe = sanitize(song.name);
-      const res = await fetch(`/api/lyrics/${encodeURIComponent(song.artist)}/${encodeURIComponent(song.name)}`);
+      const res = await fetch(`${BASE_URL}/api/lyrics/${encodeURIComponent(song.artist)}/${encodeURIComponent(song.name)}`);
       const data = await res.json();
 
       if (!res.ok) {
