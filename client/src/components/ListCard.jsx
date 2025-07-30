@@ -1,5 +1,5 @@
 import SongCard from './SongCard';
-const ListCard = ({ list, onDelete, isAdmin = false, onUnpublish  }) => {
+const ListCard = ({ list, isAdmin = false, onUnpublish  }) => {
   return (
     <div style={{ 
       border: '1px solid #ddd', 

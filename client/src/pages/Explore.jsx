@@ -90,23 +90,23 @@ const Explore = () => {
     }
   };
 
-  // const deleteList = async (listId) => {
-  //   try {
-  //     const token = localStorage.getItem('token');
-  //     await fetch(`${BASE_URL}/api/lists/${listId}`, {
-  //       method: 'DELETE',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': `Bearer ${token}`
-  //       },
-  //       body: JSON.stringify({ idToken: token })
-  //     });
-  //     setLists(lists.filter(list => list._id !== listId));
-  //   } catch (err) {
-  //     console.error('Error deleting list:', err);
-  //     alert('Failed to delete list');
-  //   }
-  // };
+  const deleteList = async (listId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(`${BASE_URL}/api/lists/${listId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ idToken: token })
+      });
+      setLists(lists.filter(list => list._id !== listId));
+    } catch (err) {
+      console.error('Error deleting list:', err);
+      alert('Failed to delete list');
+    }
+  };
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
@@ -122,7 +122,7 @@ const Explore = () => {
             <ListCard 
               key={list._id} 
               list={list} 
-              onDelete={isAdmin ? deleteList : null}
+              // onDelete={isAdmin ? deleteList : null}
               isAdmin={isAdmin}
               onUnpublish={isAdmin ? unpublishList : null}
             />
