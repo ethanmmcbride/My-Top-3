@@ -16,6 +16,8 @@ const MyList = () => {
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [recommendationError, setRecommendationError] = useState('');
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     if (!token) {
       navigate('/login');
@@ -28,7 +30,7 @@ const MyList = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:3001/api/lists', {
+      const response = await fetch(`${BASE_URL}/api/lists`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -123,7 +125,7 @@ const MyList = () => {
     
     try {
       const response = await fetch(
-        'http://localhost:3001/api/lists/songs',
+        `${BASE_URL}/api/lists/songs`,
         {
           method: 'POST',
           headers: {
@@ -149,7 +151,7 @@ const MyList = () => {
 
   const removeSongFromList = async (song) => {
     try {
-      const response = await fetch('http://localhost:3001/api/lists/songs', {
+      const response = await fetch(`${BASE_URL}/api/lists/songs`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -174,7 +176,7 @@ const MyList = () => {
   const publishList = async () => {
     try {
       const response = await fetch(
-        'http://localhost:3001/api/lists/publish',
+        `${BASE_URL}/api/lists/publish`,
         {
           method: 'PATCH',
           headers: {
@@ -254,7 +256,7 @@ const MyList = () => {
                 <button
                   onClick={async () => {
                     try {
-                      const res = await fetch('http://localhost:3001/api/lists/unpublish', {
+                      const res = await fetch( `${BASE_URL}/api/lists/unpublish`, {
                         method: 'PATCH',
                         headers: {
                           'Content-Type': 'application/json',

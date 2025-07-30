@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import ListCard from '../components/ListCard';
-const socket = io('http://localhost:3001');
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const socket = io(BASE_URL);
+
 
 const Explore = () => {
   const [lists, setLists] = useState([]);
@@ -27,7 +29,7 @@ const Explore = () => {
   const fetchPublishedLists = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/lists/explore');
+      const response = await fetch(`${BASE_URL}/api/lists/explore`);
       const data = await response.json();
       setLists(data);
     } catch (err) {
@@ -42,7 +44,7 @@ const Explore = () => {
     if (!token) return;
     
     try {
-      const response = await fetch('http://localhost:3001/verify-token', {
+      const response = await fetch(`${BASE_URL}/verify-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +66,7 @@ const Explore = () => {
   const unpublishList = async (listId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/lists/admin/unpublish/${listId}`, {
+      const response = await fetch(`${BASE_URL}/api/lists/admin/unpublish/${listId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +93,7 @@ const Explore = () => {
   const deleteList = async (listId) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`/api/lists/${listId}`, {
+      await fetch(`${BASE_URL}/api/lists/${listId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
