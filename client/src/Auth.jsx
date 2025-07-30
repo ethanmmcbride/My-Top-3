@@ -47,6 +47,7 @@ const Auth = () => {
         });
 
         const result = await response.json();
+        console.log('Register response:', result);
         alert('Registration successful!');
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -61,6 +62,7 @@ const Auth = () => {
         });
 
         const data = await verify.json();
+        console.log('Register response:', result);
         if (data.user.role === 'admin') {
           window.location.href = '/my-lists';
         } else {
