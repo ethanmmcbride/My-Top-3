@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import ListCard from '../components/ListCard';
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = `https://final-project-song-rank.onrender.com`;
 const socket = io(BASE_URL);
 
 
@@ -44,7 +44,7 @@ const Explore = () => {
     if (!token) return;
     
     try {
-      const response = await fetch(`${BASE_URL}/verify-token`, {
+      const response = await fetch(`${BASE_URL}/api/auth/verify-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

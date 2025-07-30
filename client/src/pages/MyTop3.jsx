@@ -16,7 +16,7 @@ const MyList = () => {
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [recommendationError, setRecommendationError] = useState('');
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const BASE_URL = `https://final-project-song-rank.onrender.com`;
 
   useEffect(() => {
     if (!token) {

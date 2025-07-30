@@ -40,7 +40,7 @@ const Auth = () => {
         const idToken = await user.getIdToken();
 
         // Send role info to backend
-        const response = await fetch(`${BASE_URL}/register`, {
+        const response = await fetch(`${BASE_URL}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, userId: user.uid, idToken, role })
@@ -54,7 +54,7 @@ const Auth = () => {
         localStorage.setItem('token', idToken);
 
         // Get user role to redirect
-        const verify = await fetch(`${BASE_URL}/verify-token`, {
+        const verify = await fetch(`${BASE_URL}/api/auth/verify-token`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ idToken })

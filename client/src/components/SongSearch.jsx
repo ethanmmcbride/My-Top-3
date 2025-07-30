@@ -4,7 +4,7 @@ const SongSearch = ({ onAddSong  }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const BASE_URL = `https://final-project-song-rank.onrender.com`;
 
   const searchSongs = async () => {
     if (!query.trim()) return;

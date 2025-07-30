@@ -31,7 +31,7 @@ app.set('io', io);
 app.use('/api/spotify', require('./routes/spotify'));
 app.use('/api/lyrics', require('./routes/lyricsovh'));
 app.use('/api/gemini', require('./routes/gemini'));
-app.use('/', require('./routes/auth'));
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/lists', require('./routes/SongLists'));
 
 
