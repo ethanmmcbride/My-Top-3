@@ -25,14 +25,14 @@ const ListCard = ({ list, onDelete, isAdmin = false, onUnpublish  }) => {
         </button>
       )}
 
-      {isAdmin && (
+      {/* {isAdmin && (
         <button 
           onClick={() => onDelete(list._id)}
           style={{ marginTop: '10px', backgroundColor: '#ff4444', color: 'white' }}
         >
           Delete List
         </button>
-      )}
+      )} */}
     </div>
   );
 };
