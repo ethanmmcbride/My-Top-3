@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 import ListCard from '../components/ListCard';
+const socket = io('http://localhost:3001');
 
 const Explore = () => {
   const [lists, setLists] = useState([]);
@@ -9,6 +11,17 @@ const Explore = () => {
   useEffect(() => {
     fetchPublishedLists();
     checkAdminStatus();
+  }, []);
+
+  useEffect(() => {
+    socket.on('listUpdated', (data) => {
+      console.log('List update received:', data);
+      fetchPublishedLists();
+    });
+
+    return () => {
+      socket.off('listUpdated');
+    };
   }, []);
 
   const fetchPublishedLists = async () => {

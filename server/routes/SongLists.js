@@ -85,6 +85,8 @@ router.patch('/publish', async (req, res) => {
     );
 
     if (!list) return res.status(404).json({ message: 'List not found' });
+    const io = req.app.get('io');
+    io.emit('listUpdated', { type: 'published', listId: list._id });
     res.json(list);
   } catch (err) {
     console.error(err);
@@ -108,7 +110,8 @@ router.patch('/unpublish', async (req, res) => {
     );
 
     if (!list) return res.status(404).json({ message: 'List not found' });
-
+    const io = req.app.get('io');
+    io.emit('listUpdated', { type: 'unpublished', listId: list._id });
     res.json(list);
   } catch (err) {
     console.error(err);
@@ -116,6 +119,7 @@ router.patch('/unpublish', async (req, res) => {
   }
 });
 
+// Protected Route: Admin Unpublish from Explore page
 router.patch('/admin/unpublish/:listId', async (req, res) => {
     try {
       const { idToken } = req.body;
