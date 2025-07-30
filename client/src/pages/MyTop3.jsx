@@ -93,7 +93,7 @@ const MyList = () => {
     setRecommendations(null);
 
     try {
-      const response = await fetch('/api/gemini/recommendations', {
+      const response = await fetch(`${BASE_URL}/api/gemini/recommendations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
