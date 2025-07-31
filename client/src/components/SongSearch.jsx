@@ -4,13 +4,14 @@ const SongSearch = ({ onAddSong  }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const BASE_URL = `https://final-project-song-rank.onrender.com`;
 
   const searchSongs = async () => {
     if (!query.trim()) return;
     
     setLoading(true);
     try {
-      const response = await fetch(`/api/spotify/search?q=${encodeURIComponent(query)}`);
+      const response = await fetch(`${BASE_URL}/api/spotify/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
       setResults(data.tracks.items);
     } catch (err) {

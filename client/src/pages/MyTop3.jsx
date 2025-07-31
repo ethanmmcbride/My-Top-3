@@ -16,6 +16,8 @@ const MyList = () => {
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [recommendationError, setRecommendationError] = useState('');
 
+  const BASE_URL = `https://final-project-song-rank.onrender.com`;
+
   useEffect(() => {
     if (!token) {
       navigate('/login');
@@ -28,7 +30,7 @@ const MyList = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:3001/api/lists', {
+      const response = await fetch(`${BASE_URL}/api/lists`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -65,7 +67,7 @@ const MyList = () => {
     //   };
     //   const artistSafe = sanitize(song.artist);
     //   const titleSafe = sanitize(song.name);
-      const res = await fetch(`/api/lyrics/${encodeURIComponent(song.artist)}/${encodeURIComponent(song.name)}`);
+      const res = await fetch(`${BASE_URL}/api/lyrics/${encodeURIComponent(song.artist)}/${encodeURIComponent(song.name)}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -91,7 +93,7 @@ const MyList = () => {
     setRecommendations(null);
 
     try {
-      const response = await fetch('/api/gemini/recommendations', {
+      const response = await fetch(`${BASE_URL}/api/gemini/recommendations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -123,7 +125,7 @@ const MyList = () => {
     
     try {
       const response = await fetch(
-        'http://localhost:3001/api/lists/songs',
+        `${BASE_URL}/api/lists/songs`,
         {
           method: 'POST',
           headers: {
@@ -149,7 +151,7 @@ const MyList = () => {
 
   const removeSongFromList = async (song) => {
     try {
-      const response = await fetch('http://localhost:3001/api/lists/songs', {
+      const response = await fetch(`${BASE_URL}/api/lists/songs`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -174,7 +176,7 @@ const MyList = () => {
   const publishList = async () => {
     try {
       const response = await fetch(
-        'http://localhost:3001/api/lists/publish',
+        `${BASE_URL}/api/lists/publish`,
         {
           method: 'PATCH',
           headers: {
@@ -254,7 +256,7 @@ const MyList = () => {
                 <button
                   onClick={async () => {
                     try {
-                      const res = await fetch('http://localhost:3001/api/lists/unpublish', {
+                      const res = await fetch( `${BASE_URL}/api/lists/unpublish`, {
                         method: 'PATCH',
                         headers: {
                           'Content-Type': 'application/json',

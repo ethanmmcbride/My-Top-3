@@ -29,7 +29,7 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('user');
 
-  const BASE_URL = 'http://localhost:3001';
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,27 +40,32 @@ const Auth = () => {
         const idToken = await user.getIdToken();
 
         // Send role info to backend
-        const response = await fetch(`${BASE_URL}/register`, {
+        const response = await fetch(`${BASE_URL}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, userId: user.uid, idToken, role })
         });
 
         const result = await response.json();
-        alert('Registration successful!');
+        if (response.ok) {
+          alert(result.message || 'Registration successful!');
+        } else {
+          alert(result.message || 'Registration failed.');
+        }
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const idToken = await userCredential.user.getIdToken();
         localStorage.setItem('token', idToken);
 
         // Get user role to redirect
-        const verify = await fetch(`${BASE_URL}/verify-token`, {
+        const verify = await fetch(`${BASE_URL}/api/auth/verify-token`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ idToken })
         });
 
         const data = await verify.json();
+        console.log('Register response:', data);
         if (data.user.role === 'admin') {
           window.location.href = '/my-lists';
         } else {

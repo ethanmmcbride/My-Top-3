@@ -31,11 +31,11 @@ app.set('io', io);
 app.use('/api/spotify', require('./routes/spotify'));
 app.use('/api/lyrics', require('./routes/lyricsovh'));
 app.use('/api/gemini', require('./routes/gemini'));
-app.use('/', require('./routes/auth'));
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/lists', require('./routes/SongLists'));
 
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });

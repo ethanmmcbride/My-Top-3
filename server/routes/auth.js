@@ -8,16 +8,21 @@ connectDB();
 // Register: Save user info + role to MongoDB
 router.post('/register', async (req, res) => {
   const { email, userId, idToken, role } = req.body;
+  console.log('[REGISTER REQUEST]', { email, userId, role });
   try {
-    await admin.auth().verifyIdToken(idToken);
+    const decoded = await admin.auth().verifyIdToken(idToken);
+    console.log('[TOKEN VERIFIED]', decoded.uid);
     const existing = await User.findOne({ firebaseUID: userId });
     if (!existing) {
-      await User.create({ email, firebaseUID: userId, role });
+      const createdUser = await User.create({ email, firebaseUID: userId, role });
+      console.log('[USER CREATED]', createdUser);
+    } else {
+      console.log('[USER ALREADY EXISTS]');
     }
     res.json({ message: 'User registered' });
   } catch (err) {
-    console.error(err);
-    res.status(401).json({ message: 'Invalid token' });
+    console.error('[REGISTER ERROR]', err);
+    res.status(401).json({ message: 'Invalid token or DB error' });
   }
 });
 

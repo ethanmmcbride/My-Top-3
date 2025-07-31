@@ -1,5 +1,5 @@
 import SongCard from './SongCard';
-const ListCard = ({ list, onDelete, isAdmin = false, onUnpublish  }) => {
+const ListCard = ({ list, isAdmin = false, onUnpublish  }) => {
   return (
     <div style={{ 
       border: '1px solid #ddd', 
@@ -25,14 +25,14 @@ const ListCard = ({ list, onDelete, isAdmin = false, onUnpublish  }) => {
         </button>
       )}
 
-      {isAdmin && (
+      {/* {isAdmin && (
         <button 
           onClick={() => onDelete(list._id)}
           style={{ marginTop: '10px', backgroundColor: '#ff4444', color: 'white' }}
         >
           Delete List
         </button>
-      )}
+      )} */}
     </div>
   );
 };
