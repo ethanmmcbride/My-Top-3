@@ -223,7 +223,7 @@ const MyList = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
       <h1>My Top 3 Songs</h1>
       
       <div style={{ display: 'flex', gap: '20px' }}>
