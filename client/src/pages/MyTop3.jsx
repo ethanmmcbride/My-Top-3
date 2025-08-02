@@ -9,12 +9,14 @@ const MyList = () => {
   const [error, setError] = useState(null);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
-  const [lyrics, setLyrics] = useState('');
-  const [lyricsLoading, setLyricsLoading] = useState(false);
-  const [lyricsError, setLyricsError] = useState('');
+  // const [lyrics, setLyrics] = useState('');
+  // const [lyricsLoading, setLyricsLoading] = useState(false);
+  // const [lyricsError, setLyricsError] = useState('');
   const [recommendations, setRecommendations] = useState(null);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [recommendationError, setRecommendationError] = useState('');
+  const [artistInfo, setArtistInfo] = useState(null);
+  const [artistError, setArtistError] = useState('');
 
   const BASE_URL = `https://final-project-song-rank.onrender.com`;
 
@@ -52,33 +54,49 @@ const MyList = () => {
     }
   };
 
-  const fetchLyrics = async (song) => {
-    setLyrics('');
-    setLyricsError('');
-    setLyricsLoading(true);
+  // const fetchLyrics = async (song) => {
+  //   setLyrics('');
+  //   setLyricsError('');
+  //   setLyricsLoading(true);
 
+  //   try {
+  //   //   const sanitize = (str) => {
+  //   //     return str
+  //   //       .toLowerCase()
+  //   //       .replace(/ *\([^)]*\) */g, '') // Remove things in parentheses
+  //   //       .replace(/[^a-z0-9 ]/gi, '')   // Remove special chars
+  //   //       .trim();
+  //   //   };
+  //   //   const artistSafe = sanitize(song.artist);
+  //   //   const titleSafe = sanitize(song.name);
+  //     const res = await fetch(`${BASE_URL}/api/lyrics/${encodeURIComponent(song.artist)}/${encodeURIComponent(song.name)}`);
+  //     const data = await res.json();
+
+  //     if (!res.ok) {
+  //       throw new Error(data.error || 'Failed to fetch lyrics');
+  //     }
+
+  //     setLyrics(data.lyrics);
+  //   } catch (err) {
+  //     setLyricsError(err.message);
+  //   } finally {
+  //     setLyricsLoading(false);
+  //   }
+  // };
+
+  const fetchArtistInfo = async (song) => {
+    setArtistInfo(null);
+    setArtistError('');
     try {
-    //   const sanitize = (str) => {
-    //     return str
-    //       .toLowerCase()
-    //       .replace(/ *\([^)]*\) */g, '') // Remove things in parentheses
-    //       .replace(/[^a-z0-9 ]/gi, '')   // Remove special chars
-    //       .trim();
-    //   };
-    //   const artistSafe = sanitize(song.artist);
-    //   const titleSafe = sanitize(song.name);
-      const res = await fetch(`${BASE_URL}/api/lyrics/${encodeURIComponent(song.artist)}/${encodeURIComponent(song.name)}`);
+      const res = await fetch(`${BASE_URL}/api/wiki/${encodeURIComponent(song.artist)}`);
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to fetch lyrics');
-      }
+      if (!res.ok) throw new Error(data.error || 'Could not get artist info');
 
-      setLyrics(data.lyrics);
+      setArtistInfo(data);
     } catch (err) {
-      setLyricsError(err.message);
-    } finally {
-      setLyricsLoading(false);
+      console.error(err);
+      setArtistError(err.message);
     }
   };
 
@@ -226,7 +244,7 @@ const MyList = () => {
                       key={index}
                       song={song}
                       onRemove={removeSongFromList}
-                      onShowLyrics={fetchLyrics}
+                      onShowArtistInfo={fetchArtistInfo}
                     />
                   ))
                 )}
@@ -349,8 +367,26 @@ const MyList = () => {
           )}
         </div>
       </div>
-      
-      {lyricsLoading && <p>Loading lyrics...</p>}
+      {artistError && <p style={{ color: 'red' }}>{artistError}</p>}
+      {artistInfo && (
+        <div style={{
+          marginTop: '20px',
+          textAlign: 'left',
+          padding: '10px',
+          backgroundColor: '#f0f0f0',
+          borderRadius: '5px'
+        }}>
+          <h3>{artistInfo.title}</h3>
+          {artistInfo.thumbnail && (
+            <img src={artistInfo.thumbnail.source} alt={artistInfo.title} style={{ width: '200px', marginBottom: '10px' }} />
+          )}
+          <p>{artistInfo.extract}</p>
+          <a href={artistInfo.content_urls.desktop.page} target="_blank" rel="noopener noreferrer">
+            Read more on Wikipedia
+          </a>
+        </div>
+      )}
+      {/* {lyricsLoading && <p>Loading lyrics...</p>}
       {lyricsError && <p style={{ color: 'red' }}>{lyricsError}</p>}
       {lyrics && (
         <div style={{
@@ -363,7 +399,7 @@ const MyList = () => {
           <h3>Lyrics:</h3>
           <pre style={{ whiteSpace: 'pre-wrap' }}>{lyrics}</pre>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
