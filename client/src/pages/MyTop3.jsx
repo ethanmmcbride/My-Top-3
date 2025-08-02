@@ -228,6 +228,28 @@ const MyList = () => {
       
       <div style={{ display: 'flex', gap: '20px' }}>
         <div style={{ flex: 1 }}>
+          {artistError && <p style={{ color: 'red' }}>{artistError}</p>}
+          {artistInfo && (
+            <div style={{
+              marginTop: '20px',
+              textAlign: 'left',
+              padding: '10px',
+              backgroundColor: '#f0f0f0',
+              borderRadius: '5px'
+            }}>
+              <h3>{artistInfo.title}</h3>
+              {artistInfo.thumbnail && (
+                <img src={artistInfo.thumbnail.source} alt={artistInfo.title} style={{ width: '200px', marginBottom: '10px' }} />
+              )}
+              <p>{artistInfo.extract}</p>
+              <a href={artistInfo.content_urls.desktop.page} target="_blank" rel="noopener noreferrer">
+                Read more on Wikipedia
+              </a>
+            </div>
+          )}
+        </div>
+
+        <div style={{ flex: 1 }}>
           <h2>Current List</h2>
           {list ? (
             <div>
@@ -367,25 +389,6 @@ const MyList = () => {
           )}
         </div>
       </div>
-      {artistError && <p style={{ color: 'red' }}>{artistError}</p>}
-      {artistInfo && (
-        <div style={{
-          marginTop: '20px',
-          textAlign: 'left',
-          padding: '10px',
-          backgroundColor: '#f0f0f0',
-          borderRadius: '5px'
-        }}>
-          <h3>{artistInfo.title}</h3>
-          {artistInfo.thumbnail && (
-            <img src={artistInfo.thumbnail.source} alt={artistInfo.title} style={{ width: '200px', marginBottom: '10px' }} />
-          )}
-          <p>{artistInfo.extract}</p>
-          <a href={artistInfo.content_urls.desktop.page} target="_blank" rel="noopener noreferrer">
-            Read more on Wikipedia
-          </a>
-        </div>
-      )}
       {/* {lyricsLoading && <p>Loading lyrics...</p>}
       {lyricsError && <p style={{ color: 'red' }}>{lyricsError}</p>}
       {lyrics && (
