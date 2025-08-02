@@ -4,6 +4,12 @@ This web app allows users to search for songs using Spotify, add their top 3 to 
 
 ---
 
+# My Top 3 Page
+![MyTop3](./MyTop3.png)
+
+# Explore Page - Admin View (unpublish any users list button)
+![Explore](./explore.png)
+
 ## 🧩 Project Breakdown
 
 - Users register/log in and create their **Top 3 favorite songs** list.
