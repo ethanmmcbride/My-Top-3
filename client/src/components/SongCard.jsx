@@ -1,4 +1,4 @@
-const SongCard = ({ song, onRemove, onShowLyrics }) => {
+const SongCard = ({ song, onRemove, onShowArtistInfo }) => {
   return (
     <div style={{ 
       border: '1px solid #ddd', 
@@ -25,8 +25,8 @@ const SongCard = ({ song, onRemove, onShowLyrics }) => {
         )}
 
       <div style={{ marginTop: '5px' }}>
-          {onShowLyrics && (
-            <button onClick={() => onShowLyrics(song)}>Lyrics</button>
+          {onShowArtistInfo && (
+            <button onClick={() => onShowArtistInfo(song)}>Get Artist Info</button>
           )}
       {onRemove && (
         <button 
