@@ -29,10 +29,11 @@ app.set('io', io);
 
 // API routes
 app.use('/api/spotify', require('./routes/spotify'));
-app.use('/api/lyrics', require('./routes/lyricsovh'));
+// app.use('/api/lyrics', require('./routes/lyricsovh'));
 app.use('/api/gemini', require('./routes/gemini'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/lists', require('./routes/SongLists'));
+app.use('/api/wiki', require('./routes/wikipedia'));
 
 
 const PORT = process.env.PORT || 3001;
