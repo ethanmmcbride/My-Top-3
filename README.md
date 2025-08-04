@@ -4,6 +4,7 @@ This web app allows users to search for songs using Spotify, add their top 3 to 
 
 ---
 # Available at https://sweet-stardust-eba547.netlify.app/
+---
 # My Top 3 Page
 ![MyTop3](./MyTop3.png)
 
